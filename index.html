@@ -23,12 +23,12 @@
     <div id="container"></div>
 
     <script>
+      // Verbindung zum WebSocket-Server herstellen
+      const socket = new WebSocket("ws://localhost:3000");
       // Vorhandene WebSocket-Verbindung schließen (falls vorhanden)
       if (socket && socket.readyState !== WebSocket.CLOSED) {
         socket.close();
       }
-      // Verbindung zum WebSocket-Server herstellen
-      const socket = new WebSocket("ws://localhost:3000");
 
       // Container-Element abrufen
       const container = document.getElementById("container");
