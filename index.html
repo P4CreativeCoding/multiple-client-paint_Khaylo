@@ -9,40 +9,47 @@
         height: 100vh;
       }
 
-      #cursor {
+      .cursor {
         position: absolute;
         top: 0;
         left: 0;
         width: 10px;
         height: 10px;
-        background-color: red;
         border-radius: 50%;
       }
     </style>
   </head>
   <body>
-    <div id="container">
-      <div id="cursor"></div>
-    </div>
+    <div id="container"></div>
 
     <script>
       // Verbindung zum WebSocket-Server herstellen
       const socket = new WebSocket("ws://localhost:3000");
 
-      // Cursor-Element abrufen
-      const cursor = document.getElementById("cursor");
+      // Container-Element abrufen
+      const container = document.getElementById("container");
+
+      // Funktion zum Erstellen eines Cursors für einen anderen Client
+      function createCursor(clientId, color) {
+        const cursor = document.createElement("div");
+        cursor.className = "cursor";
+        cursor.style.backgroundColor = color;
+        container.appendChild(cursor);
+
+        // WebSocket-Ereignislistener für eingehende Nachrichten von diesem Client
+        socket.addEventListener("message", function (event) {
+          const data = JSON.parse(event.data);
+          if (data.clientId === clientId) {
+            updateCursor(cursor, data.x, data.y);
+          }
+        });
+      }
 
       // Funktion zum Aktualisieren des Cursor-Stils basierend auf den empfangenen Koordinaten
-      function updateCursor(x, y) {
+      function updateCursor(cursor, x, y) {
         cursor.style.left = x + "px";
         cursor.style.top = y + "px";
       }
-
-      // WebSocket-Ereignislistener für eingehende Nachrichten
-      socket.onmessage = function (event) {
-        const data = JSON.parse(event.data);
-        updateCursor(data.x, data.y);
-      };
 
       // Mauszeigerbewegungen abfangen und Koordinaten an den Server senden
       document.addEventListener("mousemove", function (event) {
@@ -50,8 +57,29 @@
         const y = event.clientY;
         const data = { x, y };
         socket.send(JSON.stringify(data));
-        updateCursor(x, y);
       });
+
+      // WebSocket-Ereignislistener für eingehende Nachrichten beim Verbindungsstart
+      socket.addEventListener("open", function () {
+        const clientId = Math.random().toString(36).substr(2, 9); // Eindeutige ID für den Client generieren
+        const color = getRandomColor(); // Zufällige Farbe für den Cursor des Clients generieren
+
+        // Nachricht mit Client-ID und Farbe an den Server senden
+        socket.send(JSON.stringify({ clientId, color }));
+
+        // Cursor für den aktuellen Client erstellen
+        createCursor(clientId, color);
+      });
+
+      // Hilfsfunktion zur Generierung einer zufälligen Farbe
+      function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
     </script>
   </body>
 </html>
