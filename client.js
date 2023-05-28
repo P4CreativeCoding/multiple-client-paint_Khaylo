@@ -1,5 +1,7 @@
-// Verbindung zum Server herstellen
-const socket = io();
+// Verbindung zum Server herstellen, wenn die Verbindung noch nicht geöffnet ist
+if (socket.readyState !== WebSocket.OPEN) {
+  socket = io();
+}
 
 // Cursor-Objekt erstellen und aktualisieren
 const cursor = new Cursor();
