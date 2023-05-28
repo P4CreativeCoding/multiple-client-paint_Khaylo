@@ -23,6 +23,10 @@
     <div id="container"></div>
 
     <script>
+      // Vorhandene WebSocket-Verbindung schließen (falls vorhanden)
+      if (socket && socket.readyState !== WebSocket.CLOSED) {
+        socket.close();
+      }
       // Verbindung zum WebSocket-Server herstellen
       const socket = new WebSocket("ws://localhost:3000");
 
