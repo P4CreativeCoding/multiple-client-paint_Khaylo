@@ -9,8 +9,18 @@ app.use(cors);
 const server = http.createServer(app);
 const io = socketIo(server);
 
+let lines = [];
 io.on("connection", (socket) => {
   console.log("a user connected");
+  io.emit("update_lines", lines);
+
+  socket.on("line_drawn", (linedata) => {
+    lines.push(linedata);
+    io.emit("update_lines", lines);
+  });
+  socket.on("clear", () => {
+    lines = [];
+  });
 });
 
 server.listen(3000, () => {
