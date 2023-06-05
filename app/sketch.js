@@ -9,6 +9,7 @@ function preload() {
     console.log("Connected to server");
   });
 }
+
 function setup() {
   createCanvas(700, 440);
   background(255);
