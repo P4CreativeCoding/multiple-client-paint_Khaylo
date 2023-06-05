@@ -4,7 +4,7 @@ let color = "black";
 let lineWidth = "1";
 
 function preload() {
-  socket = io.connect("http://localhost:3000");
+  socket = io.connect("https://paint-with-your-friends.adaptable.app/");
   socket.on("connect", () => {
     console.log("Connected to server");
   });
