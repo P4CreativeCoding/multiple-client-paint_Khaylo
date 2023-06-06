@@ -5,7 +5,10 @@ const socketIo = require("socket.io");
 const port = process.env.PORT || 3000;
 
 const app = express();
-app.use(cors);
+//app.use(cors);
+
+// Statische Dateien bereitstellen
+app.use(express.static(__dirname + "/app"));
 
 const server = http.createServer(app);
 const io = socketIo(server);
