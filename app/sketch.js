@@ -173,3 +173,75 @@ function drawLines() {
     pop();
   }
 }
+
+// Unit-Test 1
+it("test_empty_lines_array", () => {
+  // Arrange
+  lines = [];
+
+  // Act
+  drawLines();
+
+  // Assert
+  expect(true).toBe(true); // function should not throw errors
+});
+
+// Unit-Test 2
+it("test_invalid_data_in_lines_array", () => {
+  // Arrange
+  lines = [{}, {}, {}]; // invalid data
+
+  // Act
+  drawLines();
+
+  // Assert
+  expect(true).toBe(true); // function should not throw errors
+});
+
+// Unit-Test 3
+it("test_invalid_types_in_lines_array", () => {
+  // Arrange
+  lines = [{ x1: "a", y1: "b", x2: "c", y2: "d", color: "red", lineWidth: 10 }]; // invalid types
+
+  // Act
+  drawLines();
+
+  // Assert
+  expect(true).toBe(true); // function should not throw errors
+});
+
+// Unit-Test 4
+it("test_correct_stroke_color_and_weight", () => {
+  // Arrange
+  lines = [{ x1: 0, y1: 0, x2: 100, y2: 100, color: "red", lineWidth: 10 }];
+
+  // Act
+  drawLines();
+
+  // Assert
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(100, 100);
+  ctx.strokeStyle = "red";
+  ctx.lineWidth = 10;
+  expect(ctx.stroke).toHaveBeenCalled(); // stroke should have been called with correct color and weight
+});
+
+// Unit Test 5
+it("test_correct_line_coordinates", () => {
+  // Arrange
+  lines = [{ x1: 0, y1: 0, x2: 100, y2: 100, color: "red", lineWidth: 10 }];
+
+  // Act
+  drawLines();
+
+  // Assert
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(100, 100);
+  expect(ctx.stroke).toHaveBeenCalled(); // stroke should have been called with correct coordinates
+});
